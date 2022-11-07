@@ -1,0 +1,49 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}{{ customer.fullname }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:luggages_customer_changelist' %}">Customers</a>
+    &rsaquo;
+    <a href="{% url 'admin:luggages_customer_change' customer.id %}">{{ customer.fullname }}</a>
+    &rsaquo; Detail
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="module">
+    <h1>{{ customer.fullname }}</h1>
+    <h2>Customer's Historical Luggage Movements</h2>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Departed from</th>
+                <th>Arrived at</th>
+                <th>Bus</th>
+                <th>Total amount</th>
+                <th>Luggage Invoice</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in customer.luggagebill_set.all %}
+            <tr class="row{% cycle '1' '2' %}">
+                <td>{{ item.created }}</td>
+                <td>{{ item.trip.departure }}</td>
+                <td>{{ item.trip.destination }}</td>
+                <td>{{ item.trip.bus }}</td>
+                <td class="num">&#8358;{{ item.total_amount }}</td>
+                <td><a href="{% url 'admin_luggagebill_detail' item.id %}">View</a></td>
+            </tr>
+            {% empty %}
+            <tr class="total">
+                <td colspan="6">No record available yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

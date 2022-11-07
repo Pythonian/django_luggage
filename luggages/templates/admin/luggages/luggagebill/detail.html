@@ -1,0 +1,104 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Luggage Bill {{ luggagebill.id }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:luggages_luggagebill_changelist' %}">Luggage Bills</a>
+    &rsaquo;
+    <a href="{% url 'admin:luggages_luggagebill_change' luggagebill.id %}">Luggage Bill {{ luggagebill.id }}</a>
+    &rsaquo; Detail
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="module">
+    <h1>Luggage Bill {{ luggagebill.id }}</h1>
+    <ul class="object-tools">
+        <li>
+            <a href="#" onclick="window.print();">
+                Print bill
+            </a>
+        </li>
+    </ul>
+    <table>
+        <tr>
+            <th>Created</th>
+            <td>{{ luggagebill.created }}</td>
+        </tr>
+        <tr>
+            <th>Customer</th>
+            <td>{{ luggagebill.customer }}</td>
+        </tr>
+        <tr>
+            <th>E-mail</th>
+            <td><a href="mailto:{{ luggagebill.customer.email }}">{{ luggagebill.customer.email }}</a></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>
+                {{ luggagebill.customer.address }}
+            </td>
+        </tr>
+        <tr>
+            <th>Destination (From)</th>
+            <td>{{ luggagebill.trip.departure }}</td>
+        </tr>
+        <tr>
+            <th>Destination (To)</th>
+            <td>{{ luggagebill.trip.destination }}</td>
+        </tr>
+        <tr>
+            <th>Bus</th>
+            <td>{{ luggagebill.trip.bus }} (Driver: {{ luggagebill.trip.bus.driver_name }})</td>
+        </tr>
+        <tr>
+            <th>Next of Kin</th>
+            <td>
+                {{ luggagebill.customer.next_of_kin }}
+            </td>
+        </tr>
+        <tr>
+            <th>Next of Kin Contact</th>
+            <td>
+                {{ luggagebill.customer.next_of_kin_phonenumber }}
+            </td>
+        </tr>
+        <tr>
+            <th>Total amount</th>
+            <td>&#8358;{{ luggagebill.total_amount }}</td>
+        </tr>
+    </table>
+</div>
+<div class="module">
+    <h2>Luggages</h2>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>Bag Type</th>
+                <th>Weight</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in luggagebill.items.all %}
+            <tr class="row{% cycle '1' '2' %}">
+                <td>{{ item.bag_type }}</td>
+                <td class="num">{{ item.weight }}</td>
+                <td class="num">&#8358;{{ item.weight.price }}</td>
+                <td class="num">{{ item.quantity }}</td>
+                <td class="num">&#8358;{{ item.amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total">
+                <td colspan="4">Total</td>
+                <td class="num">&#8358;{{ luggagebill.total_amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
