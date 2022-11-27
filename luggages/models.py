@@ -2,10 +2,10 @@ from django.db import models
 
 
 class Customer(models.Model):
-    fullname = models.CharField(max_length=50, unique=True)
+    fullname = models.CharField(max_length=150, unique=True)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True, null=True)
-    next_of_kin = models.CharField(max_length=50)
+    next_of_kin = models.CharField(max_length=150)
     next_of_kin_phonenumber = models.CharField(max_length=11)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -19,7 +19,7 @@ class Customer(models.Model):
 
 class Bus(models.Model):
     plate_number = models.CharField(max_length=20, unique=True)
-    driver_name = models.CharField(max_length=50)
+    driver_name = models.CharField(max_length=150)
     max_luggage_weight = models.PositiveIntegerField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -115,3 +115,15 @@ class Luggage(models.Model):
 
     def amount(self):
         return self.weight.price * self.quantity
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=250)
+    email = models.EmailField()
+    subject = models.CharField(max_length=250)
+    message = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject

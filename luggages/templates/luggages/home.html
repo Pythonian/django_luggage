@@ -1,0 +1,121 @@
+{% extends "luggages/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<header class="bg-dark py-5">
+    <div class="container">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-6">
+                <div class="my-4">
+                    <h1 class="display-6 fw-bolder text-white mb-2">We Are Coco<br>Luggage and Passenger Service</h1>
+                    <p class="lead fw-normal text-white-50 mb-4">We deliver you and your luggage(s) to your destination at cheaper rates and at quicker but safe time.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% static 'svg/logistics.svg' %}" class="d-block mx-lg-auto img-fluid"
+                    alt="Teaching illustration">
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="bg-white text-dark py-lg-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h5 class="text-primary text-decoration-underline">Who We Are</h5>
+                <h1 class="mb-4 display-3 fw-bold">You are Welcome,<br> to CMT Family</h1>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="fa-solid fa-star text-primary fs-5 me-2"></i> Efficient Transport Services</li>
+                    <li class="mb-3"><i class="fa-solid fa-star text-primary fs-5 me-2"></i> Tested and Trusted Drivers</li>
+                    <li class="mb-3"><i class="fa-solid fa-star text-primary fs-5 me-2"></i> Clean and Convenient Buses</li>
+                    <li class="mb-3"><i class="fa-solid fa-star text-primary fs-5 me-2"></i> Affordable Luggage Bills</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="text-primary text-center mb-4">Luggage Pricing</h3>
+                <table class="table table-primary table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Weight</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for weight in weights %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ weight.name }}</td>
+                            <td>{{ weight.min_weight }}kg</td>
+                            <td>&#8358;{{ weight.price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-primary py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 offset-lg-2">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fa-solid fa-circle-question fa-3x ms-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3 me-5">
+                        <span class="fs-4">Have a Question?</span>
+                        <br> <span>Please reach out to us immediately via our contact button.</span>
+                    </div>
+                    <a href="#" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#contactModal">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Contact Us</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal-body"> 
+                    <div class="mb-1">
+                        <label for="id_name" class="col-form-label">Your name:</label>
+                        <input type="text" class="form-control" id="id_name" name="name" required maxlength="250">
+                    </div>
+                    <div class="mb-1">
+                        <label for="id_email" class="col-form-label">Your Email:</label>
+                        <input type="email" class="form-control" id="id_email" name="email" maxlength="200" required>
+                    </div>
+                    <div class="mb-1">
+                        <label for="id_subject" class="col-form-label">Subject:</label>
+                        <input type="text" class="form-control" id="id_subject" name="subject" maxlength="250" required>
+                    </div>
+                    <div class="mb-1">
+                        <label for="id_message" class="col-form-label">Message:</label>
+                        <textarea class="form-control" name="message" id="id_message" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -90,6 +90,7 @@ class LuggageBillAdmin(admin.ModelAdmin):
     list_display = ['customer', 'trip', 'created', luggage_receipt]
     list_filter = ['trip__bus__plate_number', 'trip__name', 'created']
     search_fields = ['customer', 'trip']
+    # change_list_template = 'admin/luggage_bill_change_list.html'
     date_hierarchy = 'created'
     inlines = [LuggageInline]
     actions = [export_to_csv]
