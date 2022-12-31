@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
 
 
 class Customer(models.Model):
@@ -66,7 +69,9 @@ class BagType(models.Model):
 
 
 class Trip(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(
+        max_length=50, unique=True,
+        help_text='format: ENU-to-LAG-01-01-2000')
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     departure = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='departure')
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='arrival')
@@ -84,6 +89,7 @@ class Trip(models.Model):
 class LuggageBill(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

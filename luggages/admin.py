@@ -90,7 +90,23 @@ class LuggageBillAdmin(admin.ModelAdmin):
     list_display = ['customer', 'trip', 'created', luggage_receipt]
     list_filter = ['trip__bus__plate_number', 'trip__name', 'created']
     search_fields = ['customer', 'trip']
-    # change_list_template = 'admin/luggage_bill_change_list.html'
     date_hierarchy = 'created'
     inlines = [LuggageInline]
     actions = [export_to_csv]
+
+    def queryset(self, request):
+        # override queryset returned by list page to only
+        # return bills created by logged in staff
+        qs = super().queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(added_by=request.user)
+
+    def save_model(self, request, obj, form, change):
+        """Override the save method to save the current user when record is created."""
+        # check to ensure this is a record that hasn't been saved
+        if getattr(obj, 'added_by', None) is None:
+            obj.added_by = request.user
+        obj.last_modified_by = request.user
+        obj.save()
+        # return super().save_model(request, obj, form, change)
