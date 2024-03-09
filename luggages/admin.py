@@ -12,7 +12,8 @@ from .models import (
     LuggageBill,
     Luggage,
     Customer,
-    Destination,
+    State,
+    ParkLocation,
     Weight,
     Trip,
 )
@@ -43,7 +44,7 @@ def export_to_csv(modeladmin, request, queryset):
     return response
 
 
-export_to_csv.short_description = "Export to CSV"
+export_to_csv.short_description = "Export selected bills to CSV"
 
 
 def luggage_receipt(obj):
@@ -85,9 +86,15 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ["fullname", "email", "next_of_kin"]
 
 
-@admin.register(Destination)
-class DestinationAdmin(admin.ModelAdmin):
-    pass
+class ParkLocationInline(admin.StackedInline):
+    model = ParkLocation
+    extra = 1
+
+
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    list_display = ["name", "short_code"]
+    inlines = [ParkLocationInline]
 
 
 @admin.register(Trip)
@@ -101,6 +108,7 @@ class TripAdmin(admin.ModelAdmin):
         trip_luggages,
     ]
     list_filter = ["date_of_journey", "bus", "departure", "destination"]
+    date_hierarchy = "date_of_journey"
 
 
 @admin.register(Weight)

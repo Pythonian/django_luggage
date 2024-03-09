@@ -35,8 +35,9 @@ class Bus(models.Model):
         return self.plate_number
 
 
-class Destination(models.Model):
+class State(models.Model):
     name = models.CharField(max_length=20)
+    short_code = models.CharField(max_length=3)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -45,6 +46,19 @@ class Destination(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ParkLocation(models.Model):
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    location = models.CharField(max_length=50)
+    full_address = models.CharField(max_length=255)
+    contact = models.TextField()
+
+    class Meta:
+        verbose_name = "park location"
+
+    def __str__(self):
+        return self.location
 
 
 class Weight(models.Model):
@@ -74,10 +88,10 @@ class Trip(models.Model):
     )
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     departure = models.ForeignKey(
-        Destination, on_delete=models.CASCADE, related_name="departure"
+        State, on_delete=models.CASCADE, related_name="departure"
     )
     destination = models.ForeignKey(
-        Destination, on_delete=models.CASCADE, related_name="arrival"
+        State, on_delete=models.CASCADE, related_name="arrival"
     )
     date_of_journey = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
@@ -95,7 +109,12 @@ class Trip(models.Model):
 class LuggageBill(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
