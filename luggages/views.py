@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import get_object_or_404, render
 
-from .models import LuggageBill, Customer, Trip, Weight
+from .models import Customer, LuggageBill, Trip, Weight
 
 
 def homepage(request):

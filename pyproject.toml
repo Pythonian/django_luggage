@@ -17,3 +17,25 @@ exclude = '''
     | migrations
   )/
 '''
+
+[tool.ruff]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",   # isort
+]
+
+# Avoid enforcing line-length violations (`E501`)
+ignore = ["E501"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+# Exclude files and directories.
+extend-exclude = ["migrations", "manage.py"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"

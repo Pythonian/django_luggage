@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 User = settings.AUTH_USER_MODEL
@@ -144,7 +144,6 @@ class Weight(models.Model):
 
 
 class BagType(models.Model):
-
     class SizeOption(models.TextChoices):
         SMALL = "S", _("Small")
         MEDIUM = "M", _("Medium")
@@ -210,9 +209,7 @@ class Trip(models.Model):
         return self.name
 
     def total_luggage_amount(self):
-        return sum(
-            luggagebill.total_amount() for luggagebill in self.luggagebill_set.all()
-        )
+        return sum(luggagebill.total_amount() for luggagebill in self.luggagebill_set.all())
 
 
 class LuggageBill(models.Model):
