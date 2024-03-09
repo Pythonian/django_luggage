@@ -14,7 +14,7 @@ class Customer(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['fullname']
+        ordering = ["fullname"]
 
     def __str__(self):
         return self.fullname
@@ -28,8 +28,8 @@ class Bus(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['created']
-        verbose_name_plural = 'Buses'
+        ordering = ["created"]
+        verbose_name_plural = "Buses"
 
     def __str__(self):
         return self.plate_number
@@ -41,7 +41,7 @@ class Destination(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['created']
+        ordering = ["created"]
 
     def __str__(self):
         return self.name
@@ -55,7 +55,7 @@ class Weight(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['created']
+        ordering = ["created"]
 
     def __str__(self):
         return self.name
@@ -70,11 +70,15 @@ class BagType(models.Model):
 
 class Trip(models.Model):
     name = models.CharField(
-        max_length=50, unique=True,
-        help_text='format: ENU-to-LAG-01-01-2000')
+        max_length=50, unique=True, help_text="format: ENU-to-LAG-01-01-2000"
+    )
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
-    departure = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='departure')
-    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='arrival')
+    departure = models.ForeignKey(
+        Destination, on_delete=models.CASCADE, related_name="departure"
+    )
+    destination = models.ForeignKey(
+        Destination, on_delete=models.CASCADE, related_name="arrival"
+    )
     date_of_journey = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -83,7 +87,9 @@ class Trip(models.Model):
         return self.name
 
     def total_luggage_amount(self):
-        return sum(luggagebill.total_amount() for luggagebill in self.luggagebill_set.all())
+        return sum(
+            luggagebill.total_amount() for luggagebill in self.luggagebill_set.all()
+        )
 
 
 class LuggageBill(models.Model):
@@ -94,10 +100,10 @@ class LuggageBill(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created']
+        ordering = ["-created"]
 
     def __str__(self):
-        return f'Luggage Bill for {self.customer}'
+        return f"Luggage Bill for {self.customer}"
 
     def total_amount(self):
         return sum(item.amount() for item in self.items.all())
@@ -107,9 +113,9 @@ class LuggageBill(models.Model):
 
 
 class Luggage(models.Model):
-    luggage = models.ForeignKey(LuggageBill,
-                              related_name='items',
-                              on_delete=models.CASCADE)
+    luggage = models.ForeignKey(
+        LuggageBill, related_name="items", on_delete=models.CASCADE
+    )
     weight = models.ForeignKey(Weight, on_delete=models.CASCADE)
     bag_type = models.ForeignKey(BagType, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
@@ -121,15 +127,3 @@ class Luggage(models.Model):
 
     def amount(self):
         return self.weight.price * self.quantity
-
-
-class Contact(models.Model):
-    name = models.CharField(max_length=250)
-    email = models.EmailField()
-    subject = models.CharField(max_length=250)
-    message = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.subject
