@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 User = settings.AUTH_USER_MODEL
 
@@ -76,10 +77,23 @@ class Weight(models.Model):
 
 
 class BagType(models.Model):
+
+    class SizeOption(models.TextChoices):
+        SMALL = "S", _("Small")
+        MEDIUM = "M", _("Medium")
+        LARGE = "L", _("Large")
+
     name = models.CharField(max_length=50)
+    size = models.CharField(max_length=1, choices=SizeOption.choices)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("bag type")
+        verbose_name_plural = _("bag types")
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.size}"
 
 
 class Trip(models.Model):

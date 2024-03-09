@@ -64,7 +64,7 @@ def trip_luggages(obj):
 
 @admin.register(BagType)
 class BagTypeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["name", "size"]
 
 
 @admin.register(Bus)
