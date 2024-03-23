@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in customer.luggagebill_set.all %}
+            {% for item in customer.luggagebills.all %}
             <tr class="row{% cycle '1' '2' %}">
                 <td>{{ item.created }}</td>
                 <td>{{ item.trip.departure }}</td>

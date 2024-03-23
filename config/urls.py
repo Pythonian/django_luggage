@@ -34,5 +34,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = "Luggager Admin"
-admin.site.index_title = "Luggager Billing System"
-admin.site.site_title = "Luggager Admin Dashboard"
+admin.site.index_title = "Luggager Admin Portal"
+admin.site.site_title = "Welcome to Luggager Admin Dashboard"

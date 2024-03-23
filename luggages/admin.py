@@ -2,6 +2,7 @@ import csv
 import datetime
 
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -143,3 +144,6 @@ class LuggageBillAdmin(admin.ModelAdmin):
             obj.added_by = request.user
         obj.last_modified_by = request.user
         obj.save()
+
+
+admin.site.unregister(Group)
