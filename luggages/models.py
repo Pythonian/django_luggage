@@ -5,7 +5,17 @@ from django.utils.translation import gettext_lazy as _
 User = settings.AUTH_USER_MODEL
 
 
-class Customer(models.Model):
+class TimestampedModel(models.Model):
+    """A model with timestamp fields for creation and last update."""
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Customer(TimestampedModel):
     """Model representing a customer instance."""
 
     fullname = models.CharField(
@@ -29,8 +39,6 @@ class Customer(models.Model):
         _("Next of Kin Phone Number"),
         max_length=11,
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["fullname"]
@@ -42,7 +50,7 @@ class Customer(models.Model):
         return self.fullname
 
 
-class Bus(models.Model):
+class Bus(TimestampedModel):
     """Model representing a bus instance."""
 
     plate_number = models.CharField(
@@ -59,8 +67,6 @@ class Bus(models.Model):
         blank=True,
         null=True,
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["created"]
@@ -72,7 +78,7 @@ class Bus(models.Model):
         return self.plate_number
 
 
-class State(models.Model):
+class State(TimestampedModel):
     """Model representing a state instance."""
 
     name = models.CharField(
@@ -83,8 +89,6 @@ class State(models.Model):
         _("Short Code"),
         max_length=3,
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["created"]
@@ -96,7 +100,7 @@ class State(models.Model):
         return self.name
 
 
-class ParkLocation(models.Model):
+class ParkLocation(TimestampedModel):
     """Model representing a park location instance."""
 
     state = models.ForeignKey(
@@ -126,7 +130,7 @@ class ParkLocation(models.Model):
         return self.location
 
 
-class Weight(models.Model):
+class Weight(TimestampedModel):
     """Model representing a weight instance."""
 
     name = models.CharField(
@@ -141,8 +145,6 @@ class Weight(models.Model):
         max_digits=10,
         decimal_places=2,
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["created"]
@@ -154,7 +156,7 @@ class Weight(models.Model):
         return self.name
 
 
-class BagType(models.Model):
+class BagType(TimestampedModel):
     """Model representing a bag type instance."""
 
     class SizeOption(models.TextChoices):
@@ -189,7 +191,7 @@ class BagType(models.Model):
         return f"{self.name} - {self.get_size_display()}"
 
 
-class Trip(models.Model):
+class Trip(TimestampedModel):
     """Model representing a trip instance."""
 
     name = models.CharField(
@@ -218,8 +220,6 @@ class Trip(models.Model):
     date_of_journey = models.DateTimeField(
         _("Date of Journey"),
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         """String representation of the Trip model."""
@@ -230,7 +230,7 @@ class Trip(models.Model):
         return sum(luggage_bill.total_amount() for luggage_bill in self.luggagebills.all())
 
 
-class LuggageBill(models.Model):
+class LuggageBill(TimestampedModel):
     """Model representing a luggage bill instance."""
 
     customer = models.ForeignKey(
@@ -249,8 +249,6 @@ class LuggageBill(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Added by"),
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created"]
@@ -270,7 +268,7 @@ class LuggageBill(models.Model):
         return sum(item.weight.min_weight for item in self.items.all())
 
 
-class Luggage(models.Model):
+class Luggage(TimestampedModel):
     """Model representing a piece of luggage."""
 
     luggage = models.ForeignKey(
@@ -293,8 +291,6 @@ class Luggage(models.Model):
         _("Quantity"),
         default=1,
     )
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created"]
