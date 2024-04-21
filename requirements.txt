@@ -1,3 +1,6 @@
-Django==5.0.3
-pre_commit==3.6.2
+coverage==7.4.4
+Django==5.0.4
+docutils==0.20.1
+Faker==24.9.0
 python-decouple==3.8
+pre-commit==3.7.0
