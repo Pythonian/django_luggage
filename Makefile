@@ -23,8 +23,7 @@ install: venv # Install project dependencies
 freeze: venv # Freeze project dependencies
 	@$(PIP) freeze > requirements.txt
 
-migrations: venv # Run database migrations
-	@python manage.py makemigrations
+migrate: venv # Run database migrations
 	@python manage.py migrate
 
 run: venv # Run the development server
@@ -42,6 +41,12 @@ test: venv # Run tests with coverage
 
 check: venv # Perform system check
 	@python manage.py check
+
+populatedb: venv # Populate the database with fake records
+	@python manage.py populate_db
+
+collectstatic: venv # Run the collectstatic command
+	@python manage.py collectstatic
 
 clean: ## Clean up the project of unneeded files
 	@rm -rf .cache
