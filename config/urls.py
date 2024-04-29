@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from luggages.views import (
     admin_customer_detail,
@@ -26,6 +26,7 @@ urlpatterns = [
         admin_trip_luggages,
         name="admin_trip_luggages",
     ),
+    path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
     path("", homepage, name="home"),
 ]
