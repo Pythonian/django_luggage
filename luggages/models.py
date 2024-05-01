@@ -19,6 +19,11 @@ class TimestampedModel(models.Model):
 class Customer(TimestampedModel):
     """Model representing a customer instance."""
 
+    phone_number_validator = RegexValidator(
+        regex=r"^(0803|0806|0809|0703|0706|0709|0813|0816|0819)\d{7}$",
+        message="Phone number must start with 0803, 0806, 0809, 0703, 0706, 0709, 0813, 0816, or 0819 and be 11 digits long.",
+    )
+
     fullname = models.CharField(
         _("Full Name"),
         max_length=150,
@@ -39,6 +44,7 @@ class Customer(TimestampedModel):
     next_of_kin_phonenumber = models.CharField(
         _("Next of Kin Phone Number"),
         max_length=11,
+        validators=[phone_number_validator],
     )
 
     class Meta:

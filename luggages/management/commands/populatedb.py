@@ -43,7 +43,11 @@ class Command(BaseCommand):
             email = fake.email()
             address = fake.address()
             next_of_kin = fake.name()
-            next_of_kin_phonenumber = fake.phone_number()
+            # Generate a Nigerian phone number with the required prefix
+            prefix = random.choice(["0803", "0806", "0809", "0703", "0706", "0709", "0813", "0816", "0819"])
+            # Generate the remaining 7 digits randomly
+            remaining_digits = "".join(random.choices(string.digits, k=7))
+            next_of_kin_phonenumber = f"{prefix}{remaining_digits}"
             Customer.objects.create(
                 fullname=fullname,
                 email=email,
