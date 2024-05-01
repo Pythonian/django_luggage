@@ -1,5 +1,7 @@
 {% extends "admin/base_site.html" %}
 
+{% load humanize %}
+
 {% block title %}{{ customer.fullname }} {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
@@ -16,7 +18,7 @@
 
 <div class="module">
     <h1>{{ customer.fullname }}</h1>
-    <h2>Customer's Historical Luggage Movements</h2>
+    <h2>Customer's Historical Trip Movements</h2>
     <table style="width:100%">
         <thead>
             <tr>
@@ -29,13 +31,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in customer.luggagebills.all %}
+            {% for item in luggage_bills %}
             <tr class="row{% cycle '1' '2' %}">
                 <td>{{ item.created }}</td>
-                <td>{{ item.trip.departure }}</td>
-                <td>{{ item.trip.destination }}</td>
+                <td>{{ item.trip.departure.location }}, {{ item.trip.departure.state }} State</td>
+                <td>{{ item.trip.destination.location }}, {{ item.trip.destination.state }} State</td>
                 <td>{{ item.trip.bus }}</td>
-                <td class="num">&#8358;{{ item.total_amount }}</td>
+                <td class="num">&#8358;{{ item.total_amount|intcomma }}</td>
                 <td><a href="{% url 'admin_luggagebill_detail' item.id %}">View</a></td>
             </tr>
             {% empty %}

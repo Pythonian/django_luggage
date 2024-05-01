@@ -30,10 +30,12 @@ def admin_luggagebill_detail(request, luggagebill_id):
 @staff_member_required
 def admin_customer_detail(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)
+    luggage_bills = customer.luggagebill_set.all()
 
     template_name = "admin/luggages/customer/detail.html"
     context = {
         "customer": customer,
+        "luggage_bills": luggage_bills,
     }
 
     return render(request, template_name, context)

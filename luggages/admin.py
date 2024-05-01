@@ -62,6 +62,7 @@ def trip_luggages(obj):
 @admin.register(BagType)
 class BagTypeAdmin(admin.ModelAdmin):
     list_display = ["name", "size"]
+    search_fields = ["name"]
 
 
 class TripInlineBus(admin.TabularInline):
@@ -78,6 +79,7 @@ class TripInlineBus(admin.TabularInline):
 @admin.register(Bus)
 class BusAdmin(admin.ModelAdmin):
     list_display = ["plate_number", "driver_name"]
+    search_fields = ["plate_number", "driver_name"]
     inlines = [TripInlineBus]
 
 
@@ -109,10 +111,9 @@ class CustomerAdmin(admin.ModelAdmin):
         "address",
         "next_of_kin",
         "next_of_kin_phonenumber",
-        "created",
         customer_detail,
     ]
-    search_fields = ["fullname", "email", "next_of_kin"]
+    search_fields = ["fullname", "next_of_kin"]
 
 
 class ParkLocationInline(admin.StackedInline):
