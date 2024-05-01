@@ -64,9 +64,21 @@ class BagTypeAdmin(admin.ModelAdmin):
     list_display = ["name", "size"]
 
 
+class TripInline(admin.TabularInline):
+    model = Trip
+    extra = 1
+    readonly_fields = [
+        "name",
+        "departure",
+        "destination",
+        "date_of_journey",
+    ]
+
+
 @admin.register(Bus)
 class BusAdmin(admin.ModelAdmin):
     list_display = ["plate_number", "driver_name"]
+    inlines = [TripInline]
 
 
 @admin.register(Customer)
