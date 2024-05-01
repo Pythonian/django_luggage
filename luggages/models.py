@@ -1,6 +1,8 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -68,7 +70,7 @@ class Bus(TimestampedModel):
 
     plate_number = models.CharField(
         _("Plate Number"),
-        max_length=9,
+        max_length=11,
         unique=True,
         validators=[plate_number_validator],
     )
@@ -80,6 +82,7 @@ class Bus(TimestampedModel):
         _("Maximum Luggage Weight"),
         blank=True,
         null=True,
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:
@@ -153,11 +156,10 @@ class Weight(TimestampedModel):
     )
     min_weight = models.PositiveIntegerField(
         _("Minimum Weight"),
+        validators=[MinValueValidator(1)],
     )
     price = models.DecimalField(
-        _("Price"),
-        max_digits=10,
-        decimal_places=2,
+        _("Price"), max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))]
     )
 
     class Meta:
@@ -296,11 +298,11 @@ class LuggageBill(TimestampedModel):
 class Luggage(TimestampedModel):
     """Model representing a piece of luggage."""
 
-    luggage = models.ForeignKey(
+    luggagebill = models.ForeignKey(
         LuggageBill,
         related_name="items",
         on_delete=models.CASCADE,
-        verbose_name=_("Luggage"),
+        verbose_name=_("Luggage Bill"),
     )
     weight = models.ForeignKey(
         Weight,
@@ -315,6 +317,7 @@ class Luggage(TimestampedModel):
     quantity = models.PositiveIntegerField(
         _("Quantity"),
         default=1,
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:

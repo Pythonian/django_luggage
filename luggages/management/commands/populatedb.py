@@ -205,7 +205,7 @@ class Command(BaseCommand):
                 bag_type = random.choice(BagType.objects.all())
                 quantity = random.randint(1, 3)
                 Luggage.objects.create(
-                    luggage=luggage_bill,
+                    luggagebill=luggage_bill,
                     weight=weight,
                     bag_type=bag_type,
                     quantity=quantity,
