@@ -147,15 +147,18 @@ class LuggageBillAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(added_by=request.user)
 
+    def get_form(self, request, obj=None, **kwargs):
+        # Exclude the 'added_by' field from the form
+        exclude = ["added_by"]
+        kwargs["exclude"] = exclude
+        return super().get_form(request, obj, **kwargs)
+
     def save_model(self, request, obj, form, change):
-        """
-        Override this method to save the current user when record is created.
-        """
+        # Set the added_by field to the currently logged-in admin user
         # check to ensure this is a record that hasn't been saved
         if getattr(obj, "added_by", None) is None:
             obj.added_by = request.user
-        obj.last_modified_by = request.user
-        obj.save()
+        super().save_model(request, obj, form, change)
 
 
 admin.site.unregister(Group)
