@@ -1,13 +1,15 @@
 {% extends "admin/base_site.html" %}
 
-{% block title %}#{{ trip.id }} - {{ trip.name }} {{ block.super }}{% endblock %}
+{% load humanize %}
+
+{% block title %}{{ trip.name }} {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
     <a href="{% url 'admin:luggages_trip_changelist' %}">Trips</a>
     &rsaquo;
-    <a href="{% url 'admin:luggages_trip_change' trip.id %}">#{{ trip.id }} - {{ trip.name }}</a>
+    <a href="{% url 'admin:luggages_trip_change' trip.id %}">{{ trip.name }}</a>
     &rsaquo; Detail
 </div>
 {% endblock %}
@@ -15,7 +17,7 @@
 {% block content %}
 
 <div class="module">
-    <h2>Luggages for Trip #{{ trip.id }} - {{ trip.name }}</h2>
+    <h2>Luggages for Trip {{ trip.name }}</h2>
     <table style="width:100%">
         <thead>
             <tr>
@@ -31,12 +33,12 @@
                 <td>{{ item.customer.fullname }}</td>
                 <td class="num">{{ item.items.count }}</td>
                 <td class="num">{{ item.total_weight_per_customer }}kg</td>
-                <td class="num">&#8358;{{ item.total_amount }}</td>
+                <td class="num">&#8358;{{ item.total_amount|intcomma }}</td>
             </tr>
             {% endfor %}
             <tr class="total">
                 <td colspan="3">Grand Total</td>
-                <td class="num">&#8358;{{ trip.total_luggage_amount }}</td>
+                <td class="num">&#8358;{{ trip.total_luggage_amount|intcomma }}</td>
             </tr>
         </tbody>
     </table>
