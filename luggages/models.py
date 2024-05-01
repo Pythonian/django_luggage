@@ -100,10 +100,7 @@ class State(TimestampedModel):
         max_length=20,
         unique=True,
     )
-    short_code = models.CharField(
-        _("Short Code"),
-        max_length=3,
-    )
+    short_code = models.CharField(_("Short Code"), max_length=3, help_text=_("3-letter state shortcode."))
 
     class Meta:
         ordering = ["created"]

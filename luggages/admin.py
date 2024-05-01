@@ -64,7 +64,7 @@ class BagTypeAdmin(admin.ModelAdmin):
     list_display = ["name", "size"]
 
 
-class TripInline(admin.TabularInline):
+class TripInlineBus(admin.TabularInline):
     model = Trip
     extra = 1
     readonly_fields = [
@@ -78,7 +78,27 @@ class TripInline(admin.TabularInline):
 @admin.register(Bus)
 class BusAdmin(admin.ModelAdmin):
     list_display = ["plate_number", "driver_name"]
-    inlines = [TripInline]
+    inlines = [TripInlineBus]
+
+
+class TripInlineLocation(admin.TabularInline):
+    model = Trip
+    extra = 1
+    readonly_fields = [
+        "name",
+        "departure",
+        "destination",
+        "date_of_journey",
+    ]
+    fk_name = "departure"
+
+
+@admin.register(ParkLocation)
+class ParkLocationAdmin(admin.ModelAdmin):
+    list_display = ["location", "state", "full_address"]
+    list_filter = ["state"]
+    search_fields = ["full_address", "location"]
+    inlines = [TripInlineLocation]
 
 
 @admin.register(Customer)
