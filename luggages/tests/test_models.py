@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
+from django.utils import timezone
 
 from ..models import (
     BagType,
@@ -21,15 +20,15 @@ from ..models import (
 class CustomerModelTestCase(TestCase):
     def setUp(self):
         self.customer = Customer.objects.create(
-            fullname="John Doe",
-            email="john@example.com",
+            fullname="Seyi Pythonian",
+            email="seyi@pythonian.com",
             address="123 Main St",
-            next_of_kin="Jane Doe",
+            next_of_kin="Madabevel",
             next_of_kin_phonenumber="08031234567",
         )
 
     def test_string_representation(self):
-        self.assertEqual(str(self.customer), "John Doe")
+        self.assertEqual(str(self.customer), "Seyi Pythonian")
 
     def test_phone_number_validator(self):
         # Valid phone number
@@ -202,6 +201,70 @@ class BagTypeModelTestCase(TestCase):
         self.bag_type.full_clean()  # Should not raise a validation error
 
 
+class TripModelTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(username="Arie")
+        self.state_lagos = State.objects.create(name="Lagos", short_code="LAG")
+        self.state_enugu = State.objects.create(name="Enugu", short_code="ENU")
+        self.departure_location = ParkLocation.objects.create(
+            state=self.state_lagos,
+            location="Ikeja",
+            full_address="123 Ikeja Rd, Lagos",
+            contact="(123) 456-7890",
+        )
+        self.destination_location = ParkLocation.objects.create(
+            state=self.state_enugu,
+            location="Nsukka",
+            full_address="456 Nsukka St, Enugu",
+            contact="(987) 654-3210",
+        )
+        self.bus = Bus.objects.create(
+            plate_number="ABC-123-DEF",
+            driver_name="Seyi Pythonian",
+            max_luggage_weight=100,
+        )
+        self.customer = Customer.objects.create(
+            fullname="Seyi Pythonian",
+            email="seyi@pythonian.com",
+            address="123 Main St",
+            next_of_kin="Madabevel",
+            next_of_kin_phonenumber="08031234567",
+        )
+        self.trip = Trip.objects.create(
+            bus=self.bus,
+            departure=self.departure_location,
+            destination=self.destination_location,
+            date_of_journey=timezone.now(),
+        )
+        self.luggage_bill = LuggageBill.objects.create(
+            customer=self.customer,
+            trip=self.trip,
+            added_by=self.user,
+        )
+        self.weight = Weight.objects.create(name="Heavy", min_weight=50, price=100)
+        self.bag_type = BagType.objects.create(name="Backpack", size="M")
+        self.luggage_item = Luggage.objects.create(
+            luggagebill=self.luggage_bill,
+            weight=self.weight,
+            bag_type=self.bag_type,
+            quantity=1,
+        )
+
+    def test_string_representation(self):
+        expected_string = f"{self.departure_location.state.short_code}-to-{self.destination_location.state.short_code}-{self.trip.date_of_journey.strftime('%d-%m-%Y')}"
+        self.assertEqual(str(self.trip), expected_string)
+
+    def test_save_method(self):
+        # Test if save method generates the name field correctly
+        expected_name = f"{self.departure_location.state.short_code}-to-{self.destination_location.state.short_code}-{self.trip.date_of_journey.strftime('%d-%m-%Y')}"
+        self.assertEqual(self.trip.name, expected_name)
+
+    def test_total_luggage_amount_method(self):
+        # Test if total_luggage_amount method calculates correctly
+        self.luggage_bill.total_amount = 100  # Mocking total amount
+        self.assertEqual(self.trip.total_luggage_amount(), 100)
+
+
 class LuggageBillModelTestCase(TestCase):
     def setUp(self):
         self.customer = Customer.objects.create(
@@ -235,7 +298,7 @@ class LuggageBillModelTestCase(TestCase):
             bus=self.bus,
             departure=self.departure,
             destination=self.destination,
-            date_of_journey=datetime(2024, 5, 1, 8, 0, 0),
+            date_of_journey=timezone.now(),
         )
         self.user = User.objects.create(username="testuser")
         self.luggage_bill = LuggageBill.objects.create(
@@ -310,7 +373,7 @@ class LuggageModelTestCase(TestCase):
             bus=self.bus,
             departure=self.departure,
             destination=self.destination,
-            date_of_journey=datetime(2024, 5, 1, 8, 0, 0),
+            date_of_journey=timezone.now(),
         )
         self.user = User.objects.create(username="testuser")
 
