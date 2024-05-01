@@ -122,8 +122,14 @@ class ParkLocationInline(admin.StackedInline):
 
 @admin.register(State)
 class StateAdmin(admin.ModelAdmin):
-    list_display = ["name", "short_code"]
+    list_display = ["name", "short_code", "park_locations_count"]
     inlines = [ParkLocationInline]
+
+    def park_locations_count(self, obj):
+        return obj.parklocation_set.count()
+
+    park_locations_count.short_description = "Number of Park Locations"
+    park_locations_count.admin_order_field = "parklocation_set__count"
 
 
 @admin.register(Trip)
