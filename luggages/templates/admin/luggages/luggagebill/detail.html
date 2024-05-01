@@ -32,7 +32,7 @@
         </tr>
         <tr>
             <th>Customer</th>
-            <td>{{ luggagebill.customer }}</td>
+            <td><a href="{% url 'admin:luggages_customer_change' luggagebill.customer.id %}">{{ luggagebill.customer }}</a></td>
         </tr>
         <tr>
             <th>E-mail</th>
@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <th>Bus</th>
-            <td>{{ luggagebill.trip.bus }} (Driver: {{ luggagebill.trip.bus.driver_name }})</td>
+            <td><a href="{% url 'admin:luggages_bus_change' luggagebill.trip.bus.id %}">{{ luggagebill.trip.bus }} (Driver: {{ luggagebill.trip.bus.driver_name }})</a></td>
         </tr>
         <tr>
             <th>Total amount</th>
