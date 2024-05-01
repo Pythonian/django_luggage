@@ -170,12 +170,12 @@ class Command(BaseCommand):
         self.stdout.write("Populating Trips...")
         for _ in range(50):
             bus = random.choice(Bus.objects.all())
-            departure = random.choice(State.objects.all())
+            departure = random.choice(ParkLocation.objects.all())
             # Ensure departure and destination states are different
-            destination = random.choice(State.objects.exclude(pk=departure.pk))
+            destination = random.choice(ParkLocation.objects.exclude(pk=departure.pk))
             date_of_journey = fake.date_time_this_year(tzinfo=timezone.get_current_timezone())
             # Format trip name
-            name = f"{departure.short_code}-to-{destination.short_code}-{date_of_journey.strftime('%d-%m-%Y')}"
+            name = f"{departure.state.short_code}-to-{destination.state.short_code}-{date_of_journey.strftime('%d-%m-%Y')}"
             if not Trip.objects.filter(name=name).exists():
                 Trip.objects.create(
                     name=name,

@@ -1,5 +1,7 @@
 {% extends "admin/base_site.html" %}
 
+{% load humanize %}
+
 {% block title %}Luggage Bill {{ luggagebill.id }} {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
@@ -43,18 +45,6 @@
             </td>
         </tr>
         <tr>
-            <th>Destination (From)</th>
-            <td>{{ luggagebill.trip.departure }}</td>
-        </tr>
-        <tr>
-            <th>Destination (To)</th>
-            <td>{{ luggagebill.trip.destination }}</td>
-        </tr>
-        <tr>
-            <th>Bus</th>
-            <td>{{ luggagebill.trip.bus }} (Driver: {{ luggagebill.trip.bus.driver_name }})</td>
-        </tr>
-        <tr>
             <th>Next of Kin</th>
             <td>
                 {{ luggagebill.customer.next_of_kin }}
@@ -67,8 +57,20 @@
             </td>
         </tr>
         <tr>
+            <th>Destination (From)</th>
+            <td>{{ luggagebill.trip.departure.location }}, {{ luggagebill.trip.departure.state }} State</td>
+        </tr>
+        <tr>
+            <th>Destination (To)</th>
+            <td>{{ luggagebill.trip.destination.location }}, {{ luggagebill.trip.destination.state }} State</td>
+        </tr>
+        <tr>
+            <th>Bus</th>
+            <td>{{ luggagebill.trip.bus }} (Driver: {{ luggagebill.trip.bus.driver_name }})</td>
+        </tr>
+        <tr>
             <th>Total amount</th>
-            <td>&#8358;{{ luggagebill.total_amount }}</td>
+            <td>&#8358;{{ luggagebill.total_amount|intcomma }}</td>
         </tr>
     </table>
 </div>
@@ -89,14 +91,14 @@
             <tr class="row{% cycle '1' '2' %}">
                 <td>{{ item.bag_type }}</td>
                 <td class="num">{{ item.weight }}</td>
-                <td class="num">&#8358;{{ item.weight.price }}</td>
+                <td class="num">&#8358;{{ item.weight.price|intcomma }}</td>
                 <td class="num">{{ item.quantity }}</td>
-                <td class="num">&#8358;{{ item.amount }}</td>
+                <td class="num">&#8358;{{ item.amount|intcomma }}</td>
             </tr>
             {% endfor %}
             <tr class="total">
                 <td colspan="4">Total</td>
-                <td class="num">&#8358;{{ luggagebill.total_amount }}</td>
+                <td class="num">&#8358;{{ luggagebill.total_amount|intcomma }}</td>
             </tr>
         </tbody>
     </table>

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -222,13 +223,13 @@ class Trip(TimestampedModel):
         verbose_name=_("Bus"),
     )
     departure = models.ForeignKey(
-        State,
+        ParkLocation,
         on_delete=models.CASCADE,
         related_name="departures",
         verbose_name=_("Departure"),
     )
     destination = models.ForeignKey(
-        State,
+        ParkLocation,
         on_delete=models.CASCADE,
         related_name="arrivals",
         verbose_name=_("Destination"),
@@ -240,6 +241,17 @@ class Trip(TimestampedModel):
     def __str__(self):
         """String representation of the Trip model."""
         return self.name
+
+    def save(self, *args, **kwargs):
+        """Override save method to automatically generate Trip name."""
+        # Format trip name based on departure and destination location
+        self.name = f"{self.departure.state.short_code}-to-{self.destination.state.short_code}-{self.date_of_journey.strftime('%d-%m-%Y')}"
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        """Ensure departure and destination locations are different."""
+        if self.departure_id == self.destination_id:
+            raise ValidationError("Departure and destination locations must be different.")
 
     def total_luggage_amount(self):
         """Calculate the total luggage amount for the trip."""
