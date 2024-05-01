@@ -43,10 +43,13 @@ check: venv # Perform system check
 	@python manage.py check
 
 populatedb: venv # Populate the database with fake records
-	@python manage.py populate_db
+	@python manage.py populatedb
 
 collectstatic: venv # Run the collectstatic command
 	@python manage.py collectstatic
+
+flush: venv # Delete the data in the database
+	@python manage.py flush
 
 clean: ## Clean up the project of unneeded files
 	@rm -rf .cache

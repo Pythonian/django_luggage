@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -53,10 +54,16 @@ class Customer(TimestampedModel):
 class Bus(TimestampedModel):
     """Model representing a bus instance."""
 
+    plate_number_validator = RegexValidator(
+        regex=r"^[A-Z]{3}-\d{3}-[A-Z]{3}$",
+        message="Plate number must be in the format: AAA-111-AAA",
+    )
+
     plate_number = models.CharField(
         _("Plate Number"),
-        max_length=20,
+        max_length=9,
         unique=True,
+        validators=[plate_number_validator],
     )
     driver_name = models.CharField(
         _("Driver's Name"),
@@ -84,6 +91,7 @@ class State(TimestampedModel):
     name = models.CharField(
         _("Name"),
         max_length=20,
+        unique=True,
     )
     short_code = models.CharField(
         _("Short Code"),
@@ -111,6 +119,8 @@ class ParkLocation(TimestampedModel):
     location = models.CharField(
         _("Location"),
         max_length=50,
+        unique=True,
+        help_text=_("The city the park is located in."),
     )
     full_address = models.CharField(
         _("Full Address"),
@@ -198,7 +208,7 @@ class Trip(TimestampedModel):
         _("Trip"),
         max_length=50,
         unique=True,
-        help_text=_("Format: EN-to-LA-01-01-2000"),
+        help_text=_("Format: ENU-to-LAG-01-01-2000"),
     )
     bus = models.ForeignKey(
         Bus,
