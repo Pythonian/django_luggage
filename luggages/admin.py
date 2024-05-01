@@ -143,7 +143,13 @@ class TripAdmin(admin.ModelAdmin):
         "date_of_journey",
         trip_luggages,
     ]
-    list_filter = ["date_of_journey", "bus", "departure", "destination"]
+    list_filter = ["date_of_journey"]
+    search_fields = [
+        "departure__location",
+        "destination__location",
+        "bus__plate_number",
+        "name",
+    ]
     date_hierarchy = "date_of_journey"
 
 
@@ -160,8 +166,8 @@ class LuggageInline(admin.TabularInline):
 @admin.register(LuggageBill)
 class LuggageBillAdmin(admin.ModelAdmin):
     list_display = ["customer", "trip", "created", luggage_receipt]
-    list_filter = ["trip__bus__plate_number", "trip__name", "created"]
-    search_fields = ["customer", "trip"]
+    list_filter = ["created"]
+    search_fields = ["customer__fullname", "trip__name", "trip__bus__plate_number"]
     date_hierarchy = "created"
     inlines = [LuggageInline]
     actions = [export_to_csv]
